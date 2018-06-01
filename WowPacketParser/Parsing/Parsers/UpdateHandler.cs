@@ -2554,7 +2554,17 @@ namespace WowPacketParser.Parsing.Parsers
                 moveInfo = MovementHandler.ReadMovementInfo(packet, guid, index);
                 var moveFlags = moveInfo.Flags;
 
-                for (var i = 0; i < 9; ++i)
+                //1.12.1 starts with 6 values
+                int speedTypeLength = 6;
+
+                //TBC added 2 more
+                if(ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+                    speedTypeLength += 2;
+
+                if(ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
+                    speedTypeLength++;
+
+                for (var i = 0; i < speedTypeLength; ++i)
                 {
                     var speedType = (SpeedType)i;
                     var speed = packet.ReadSingle(speedType + " Speed", index);
